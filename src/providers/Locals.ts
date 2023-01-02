@@ -10,6 +10,7 @@ interface IConfig {
     ENVIRONMENT: string;
     SCRAPE_FREQUENCY: string;
     TIKTOK_TRENDS_URL: string;
+    EACH_LOCATION_VIDEO_COUNT: number;
 }
 
 class Locals {
@@ -21,6 +22,7 @@ class Locals {
             ENVIRONMENT: process.env.ENVIRONMENT || "DEV",
             SCRAPE_FREQUENCY: process.env.SCRAPE_FREQUENCY || "",
             TIKTOK_TRENDS_URL: process.env.TIKTOK_TRENDS_URL || "",
+            EACH_LOCATION_VIDEO_COUNT: parseInt(process.env.EACH_LOCATION_VIDEO_COUNT) || 5,
         };
     }
     public static init(_express: Application): Application {

@@ -1,7 +1,7 @@
 import Express from "./Express";
 import { Database } from "./Database";
 import scrapeJob from "../jobs/scrape.job";
-
+import puppeteerService from "../services/puppeteer.service";
 class App {
     // Loads your Server
     public loadServer(): void {
@@ -16,6 +16,10 @@ class App {
     }
     public loadScheduler(): void {
         scrapeJob.init();
+    }
+
+    public loadBrowser(): void {
+        puppeteerService.initiate();
     }
 }
 
