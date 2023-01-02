@@ -1,0 +1,43 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+      "target": "esnext",
+      "lib": ["esnext", "esnext.asynciterable", "dom", "dom.iterable"],
+      "typeRoots": ["node_modules/@types"],
+      "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "forceConsistentCasingInFileNames": true,
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "pretty": true,
+      "sourceMap": true,
+      "declaration": true,
+      "outDir": "./dist",
+      "skipLibCheck": true,
+      "allowJs": true,
+      "noEmit": false,
+      "esModuleInterop": true,
+      "resolveJsonModule": true,
+      "importHelpers": true,
+      "baseUrl": "./src",
+      "paths": {
+        "@/*": ["*"],
+        "@config/*": ["config/*"],
+        "@controllers/*": ["controllers/*"],
+        "@databases/*": ["databases/*"],
+        "@exceptions/*": ["exceptions/*"],
+        "@interfaces/*": ["interfaces/*"],
+        "@dtos/*": ["dtos/*"],
+        "@middlewares/*": ["middlewares/*"],
+        "@models/*": ["models/*"],
+        "@routes/*": ["routes/*"],
+        "@services/*": ["services/*"],
+        "@utils/*": ["utils/*"],
+        "@constraints/*": ["constraints/*"]
+      }
+    },
+    // "include": ["src/**/*.ts", "src/**/*.json", ".env", "src/config/user-agent.js"],
+    "exclude": ["node_modules", "src/http", "src/logs", "src/tests"]
+  }
+  
