@@ -3,3 +3,6 @@ node_modules
 package-lock.json
 dist
 settings.json
+test.js
+tiktok-body.json
+tiktok-page.png

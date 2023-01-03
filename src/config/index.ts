@@ -8,3 +8,5 @@ export const env_variables = {
 };
 
 export const location = ["US", "ID", "PH", "MY", "RU", "ES", "TH"]
+
+export const TIKTOK_TRENDS_URL = "https://www.tiktok.com/foryou"

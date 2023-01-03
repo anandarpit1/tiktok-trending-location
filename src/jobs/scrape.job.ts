@@ -1,9 +1,7 @@
 import JobCreator from "./jobCreator";
 import Locals from "../providers/Locals";
-import { location } from "../config/index";
+import { location, TIKTOK_TRENDS_URL } from "../config/index";
 import proxyIpServices from "../services/proxyIp.services";
-import puppeteerService from "../services/puppeteer.service";
-import useProxy from "puppeteer-page-proxy";
 import cheerio from "cheerio";
 import axios from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
@@ -13,100 +11,72 @@ class Scraper extends JobCreator {
   }
 
   public init = () => {
-    Scraper.scrapeTiktok();
+    Scraper.startJob(); //Replace with the original cron job
   };
 
-  public static scrapeTrends = async () => {
-    const browser = puppeteerService.getBrowserobject();
+  public static startJob = async () => {
+    let promises = [];
     for (let i = 0; i < location.length; i++) {
-      let result = await proxyIpServices.getProxyIp(location[i]);
-      const proxy = result.IPs[0].split(":");
-      console.log(proxy);
-
-      let videoCount = Locals.config().EACH_LOCATION_VIDEO_COUNT;
-      let url = Locals.config().TIKTOK_TRENDS_URL;
-      console.log(videoCount);
-
-      for (let j = 0; j < videoCount; j++) {
-        const page = await browser.newPage();
-        await useProxy(page, `http://${proxy[0]}:${proxy[1]}`);
-
-        const data = await useProxy.lookup(page);
-        console.log(data.ip);
-
-        await page.goto(url, {
-          waitUntil: "domcontentloaded",
-          timeout: 0,
-        });
-        await page.screenshot({ path: `tiktok-page.png` });
-
-        const scrapedUrl = await page.evaluate(async () => {
-          let video = document.querySelector("video");
-          return video;
-        });
-        console.log(scrapedUrl);
-
-        await page.close();
-      }
+      promises.push(this.scrapeTiktok(i));
     }
+
+    Promise.all(promises)
+      .then(() => {
+        console.log("All done");
+      })
+      .catch((e) => {
+        console.error(e.message);
+      });
   };
 
-  public static scrapeTiktok = async () => {
-    let completeVideoData = [];
-    for (let i = 0; i < location.length; i++) {
-      let videoCount = Locals.config().EACH_LOCATION_VIDEO_COUNT;
+  public static scrapeTiktok = async (i: number) => {
+    const singleLocationData = [];
+    let result = await proxyIpServices.getProxyIp(location[i]);
+    const proxy = result.IPs[0].split(":");
+    const instance = axios.create({
+      httpsAgent: new HttpsProxyAgent({
+        host: `${proxy[0]}`,
+        port: `${proxy[1]}`,
+      }),
+    });
+    const config = {
+      method: "get",
+      url: TIKTOK_TRENDS_URL,
+    };
+    let data = await instance(config);
+    const $ = cheerio.load(data.data);
 
-      const locationVideoData = new Set();
-
-      for (let j = 0; j < videoCount; j++) {
-        let result = await proxyIpServices.getProxyIp(location[i]);
-        const proxy = result.IPs[0].split(":");
-        const instance = axios.create({
-          httpsAgent: new HttpsProxyAgent({
-            host: `${proxy[0]}`,
-            port: `${proxy[1]}`,
-          }),
-        });
-        const config = {
-          method: "get",
-          url: "https://www.tiktok.com/foryou",
-        };
-        let data = await instance(config);
-        const $ = cheerio.load(data.data);
-
-        const body = await $('script[id="SIGI_STATE"]').html();
-        try {
-          const body1 = JSON.parse(body);
-        const username = Object.keys(body1.UserModule.users)[0];
+    const body = await $('script[id="SIGI_STATE"]').html();
+    try {
+      const body1 = JSON.parse(body);
+      const objectLength = Object.keys(body1.ItemModule).length;
+      for (let i = 0; i < objectLength; i++) {
+        const username = Object.keys(body1.UserModule.users)[i];
         const profilePic = {
           large: body1.UserModule.users[username].avatarLarger,
           medium: body1.UserModule.users[username].avatarMedium,
           small: body1.UserModule.users[username].avatarThumb,
         };
-        const id = Object.keys(body1.ItemModule)[0];
-        const description = body1.ItemModule[id].desc;
+        const id = Object.keys(body1.ItemModule)[i];
+        const { author, desc } = body1.ItemModule[id];
         const { ratio, cover, originCover, dynamicCover, downloadAddr } =
           body1.ItemModule[id].video;
         const thumbnail = { ratio, cover, originCover, dynamicCover };
         const mediaUrl = downloadAddr;
-
-        const vData = [
-          { profilePic },
-          { username },
-          { description },
-          { thumbnail },
-          { mediaUrl },
-        ];
-        locationVideoData.add(vData);
-        } catch (error) {
-          console.log(error.message);
-          videoCount;
-        }
+        const url = `https://www.tiktok.com/@${author}/video/${id}`;
+        singleLocationData.push({
+          profilePic,
+          username,
+          desc,
+          thumbnail,
+          mediaUrl,
+          url,
+        });
       }
-      console.log(locationVideoData);
-      completeVideoData.push({ iso: location[i], data: locationVideoData });
+    } catch (error) {
+      console.log(error.message);
     }
-    console.log(completeVideoData);
+    console.log(singleLocationData);
   };
 }
 
