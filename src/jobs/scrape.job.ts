@@ -5,6 +5,7 @@ import proxyIpServices from "../services/proxyIp.services";
 import cheerio from "cheerio";
 import axios from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
+import TiktokSchema from "../models/media-tiktok.model"
 class Scraper extends JobCreator {
   constructor() {
     super(Locals.config().SCRAPE_FREQUENCY, Scraper.scrapeTiktok);
@@ -29,9 +30,9 @@ class Scraper extends JobCreator {
       });
   };
 
-  public static scrapeTiktok = async (i: number) => {
+  public static scrapeTiktok = async (index: number) => {
     const singleLocationData = [];
-    let result = await proxyIpServices.getProxyIp(location[i]);
+    let result = await proxyIpServices.getProxyIp(location[index]);
     const proxy = result.IPs[0].split(":");
     const instance = axios.create({
       httpsAgent: new HttpsProxyAgent({
@@ -71,12 +72,13 @@ class Scraper extends JobCreator {
           thumbnail,
           mediaUrl,
           url,
+          location: location[index],
         });
       }
     } catch (error) {
       console.log(error.message);
     }
-    console.log(singleLocationData);
+    const coolData = await TiktokSchema.insertMany(singleLocationData);
   };
 }
 

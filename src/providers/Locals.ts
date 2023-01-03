@@ -9,8 +9,6 @@ interface IConfig {
     MONGODB_URI: string;
     ENVIRONMENT: string;
     SCRAPE_FREQUENCY: string;
-    TIKTOK_TRENDS_URL: string;
-    EACH_LOCATION_VIDEO_COUNT: number;
 }
 
 class Locals {
@@ -20,9 +18,7 @@ class Locals {
             NODE_ENV: process.env.NODE_ENV || "",
             MONGODB_URI: process.env.MONGODB_URI || "",
             ENVIRONMENT: process.env.ENVIRONMENT || "DEV",
-            SCRAPE_FREQUENCY: process.env.SCRAPE_FREQUENCY || "",
-            TIKTOK_TRENDS_URL: process.env.TIKTOK_TRENDS_URL || "",
-            EACH_LOCATION_VIDEO_COUNT: parseInt(process.env.EACH_LOCATION_VIDEO_COUNT) || 5,
+            SCRAPE_FREQUENCY: process.env.SCRAPE_FREQUENCY || ""
         };
     }
     public static init(_express: Application): Application {
