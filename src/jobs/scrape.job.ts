@@ -5,14 +5,17 @@ import proxyIpServices from "../services/proxyIp.services";
 import cheerio from "cheerio";
 import axios from "axios";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import TiktokSchema from "../models/media-tiktok.model"
+import TiktokSchema from "../models/media-tiktok.model";
+import Hash from "../cache/generateHash";
+import RedisClient from "../cache/store/redisCacheStore";
+
 class Scraper extends JobCreator {
   constructor() {
-    super(Locals.config().SCRAPE_FREQUENCY, Scraper.scrapeTiktok);
+    super(Locals.config().SCRAPE_FREQUENCY, Scraper.startJob);
   }
 
   public init = () => {
-    Scraper.startJob(); //Replace with the original cron job
+    this.job.start();
   };
 
   public static startJob = async () => {
@@ -78,7 +81,19 @@ class Scraper extends JobCreator {
     } catch (error) {
       console.log(error.message);
     }
-    const coolData = await TiktokSchema.insertMany(singleLocationData);
+    await TiktokSchema.insertMany(singleLocationData);
+    const today = new Date();
+    const generateCacheKey = `${today.getDate()}-${today.getMonth()}-${today.getFullYear()}-${
+      location[index]
+    }`;
+    const cacheKey = new Hash().generateCacheHash(generateCacheKey);
+
+    const client = new RedisClient();
+    client.set(
+      cacheKey,
+      JSON.stringify(singleLocationData),
+      Locals.config().REDIS_EXPIRY
+    );
   };
 }
 

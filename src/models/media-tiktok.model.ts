@@ -26,7 +26,7 @@ export const tiktokSchema = new mongoose.Schema(
     url: String,
     expireAt: {
       type: Date,
-      default: Date.now() + 60 * 1000, // expires in 7 days
+      default: Date.now() + 60 * 1000 * 24 * 7, // expires in 7 days
     },
   },
   {
