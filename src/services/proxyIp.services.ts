@@ -40,31 +40,6 @@ class proxyIp {
       console.log("This is error: " + err);
     }
   }
-
-  //   public async addIPtoDB(proxyData: any) {
-  //     const result = await ipListModel.create({ ip: proxyData.IPs[0] });
-  //     console.log(result)
-  //   }
-
-  //   public async updateIPCount(proxyData: any, status: string) {
-  //     const result = await ipListModel.findOneAndUpdate(
-  //       { ip: proxyData.IPs[0], status:  status},
-  //       { $inc: { count: 1 } },
-  //       {
-  //         new: true,
-  //         upsert: true,
-  //       },
-  //     );
-  //     console.log(result);
-  //   }
-
-  //   public async checkIPinDB(IPs: any) {
-  //     const ipList = await ipListModel.findOne({ ip: IPs });
-  //     if (ipList) {
-  //       return true;
-  //     }
-  //     return false;
-  //   }
 }
 
 export default new proxyIp();

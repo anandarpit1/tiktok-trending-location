@@ -1,13 +1,17 @@
 import mongoose from "../providers/Database";
 
 export interface IMediaTiktok {
-  location: String;
   profilePic: any;
-  username: String;
-  desc: String;
-  thumbnail: any;
-  mediaUrl: String;
   url: String;
+  thumbnail: any;
+  username: String;
+  audioUrl: any;
+  description: String;
+  video_nw: any;
+  video_w: any;
+  dimensions: any;
+  play_count: any;
+  location: String;
 }
 
 export interface IMediaModel extends IMediaTiktok, mongoose.Document {}
@@ -20,9 +24,13 @@ export const tiktokSchema = new mongoose.Schema(
     },
     profilePic: mongoose.SchemaTypes.Mixed,
     username: String,
-    desc: String,
+    description: String,
     thumbnail: mongoose.SchemaTypes.Mixed,
-    mediaUrl: String,
+    audioUrl: mongoose.SchemaTypes.Mixed,
+    video_nw: mongoose.SchemaTypes.Mixed,
+    video_w: mongoose.SchemaTypes.Mixed,
+    dimensions: mongoose.SchemaTypes.Mixed,
+    plaa_count: mongoose.SchemaTypes.Mixed,
     url: String,
     expireAt: {
       type: Date,

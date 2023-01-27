@@ -9,7 +9,9 @@ interface IConfig {
   MONGODB_URI: string;
   ENVIRONMENT: string;
   SCRAPE_FREQUENCY: string;
-  REDIS_EXPIRY: number;
+  REDIS_EXPIRY: string;
+  REDIS_PORT: string;
+  REDIS_HOST: string;
 }
 
 class Locals {
@@ -20,7 +22,9 @@ class Locals {
       MONGODB_URI: process.env.MONGODB_URI || "",
       ENVIRONMENT: process.env.ENVIRONMENT || "DEV",
       SCRAPE_FREQUENCY: process.env.SCRAPE_FREQUENCY || "",
-      REDIS_EXPIRY: parseInt(process.env.REDIS_EXPIRY) || 60 * 60 * 24,
+      REDIS_EXPIRY: process.env.REDIS_EXPIRY || "86400",
+      REDIS_PORT: process.env.REDIS_PORT || "6379",
+      REDIS_HOST: process.env.REDIS_HOST || "127.0.0.1",
     };
   }
   public static init(_express: Application): Application {

@@ -1,9 +1,10 @@
 const Redis = require("ioredis");
-
+import Locals from "../../providers/Locals";
 class RedisStore {
   private client;
   constructor() {
-    this.client = new Redis("127.0.0.1:6379");
+    const connString = Locals.config().REDIS_HOST + ":" + parseInt(Locals.config().REDIS_PORT);
+    this.client = new Redis();
     this.client.on("error", (err) => console.log("Redis Client Error", err));
   }
 

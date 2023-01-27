@@ -5,6 +5,7 @@ export const env_variables = {
   proxySecretKey: process.env.PROXY_SECRET_KEY,
   proxyCount: process.env.PROXY_COUNT,
   proxyFlag: process.env.PROXY_FLAG,
+  redisExpiry: process.env.REDIS_EXPIRY,
 };
 
 export const location = ["US", "ID", "PH", "MY", "RU", "ES", "TH"]
