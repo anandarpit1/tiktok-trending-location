@@ -33,6 +33,12 @@ router.get(
           location: location,
           date: { $gte: today.getDate() - 60 * 1000 * 24 },
         });
+        if(!data && location !== "US") {
+          data = await TiktokSchema.find({
+            location: "US",
+            date: { $gte: today.getDate() - 60 * 1000 * 24 },
+          });
+        }
         client.set(cacheKey, JSON.stringify(data), parseInt(Locals.config().REDIS_EXPIRY));
       }
       return response.send(data);

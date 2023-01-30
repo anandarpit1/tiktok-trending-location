@@ -34,7 +34,7 @@ export const tiktokSchema = new mongoose.Schema(
     url: String,
     expireAt: {
       type: Date,
-      default: Date.now() + 60 * 1000 * 24 * 7, // expires in 7 days
+      default: Date.now() + 60 * 100 * 60 * 24, // expires in 1 day
     },
   },
   {
@@ -42,6 +42,6 @@ export const tiktokSchema = new mongoose.Schema(
   }
 );
 
-tiktokSchema.index({ createdAt: 1 });
+tiktokSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
 
 export default mongoose.model<IMediaModel>("Media", tiktokSchema);

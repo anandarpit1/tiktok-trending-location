@@ -8,6 +8,7 @@ export const env_variables = {
   redisExpiry: process.env.REDIS_EXPIRY,
 };
 
+// Turkey and Portugal is missing from TTPROXY
 export const location = ["US", "ID", "PH", "MY", "RU", "ES", "TH"]
 
 export const TIKTOK_TRENDS_URL = "https://www.tiktok.com/foryou"

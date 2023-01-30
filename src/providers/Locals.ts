@@ -10,8 +10,9 @@ interface IConfig {
   ENVIRONMENT: string;
   SCRAPE_FREQUENCY: string;
   REDIS_EXPIRY: string;
-  REDIS_PORT: string;
+  REDIS_PORT: number;
   REDIS_HOST: string;
+  REDIS_PASSWORD: string;
 }
 
 class Locals {
@@ -23,8 +24,9 @@ class Locals {
       ENVIRONMENT: process.env.ENVIRONMENT || "DEV",
       SCRAPE_FREQUENCY: process.env.SCRAPE_FREQUENCY || "",
       REDIS_EXPIRY: process.env.REDIS_EXPIRY || "86400",
-      REDIS_PORT: process.env.REDIS_PORT || "6379",
+      REDIS_PORT: Number(process.env.REDIS_PORT || "6379"),
       REDIS_HOST: process.env.REDIS_HOST || "127.0.0.1",
+      REDIS_PASSWORD: process.env.REDIS_PASSWORD,
     };
   }
   public static init(_express: Application): Application {

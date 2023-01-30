@@ -112,6 +112,15 @@ class Scraper extends JobCreator {
             x.aweme_list[0].video.download_addr.url_list[1],
             x.aweme_list[0].video.download_addr.url_list[2],
           ];
+          const stats = {
+            comment_count: x.aweme_list[0].statistics.comment_count,
+            like_count: x.aweme_list[0].statistics.digg_count,
+            download_count: x.aweme_list[0].statistics.download_count,
+            play_count: x.aweme_list[0].statistics.play_count,
+            share_count: x.aweme_list[0].statistics.play_count,
+            forward_count: x.aweme_list[0].statistics.forward_count,
+            whatsapp_count: x.aweme_list[0].statistics.whatsapp_share_count,
+          }
           const dimensions = {
             width: x.aweme_list[0].video.download_addr.width,
             height: x.aweme_list[0].video.download_addr.height,

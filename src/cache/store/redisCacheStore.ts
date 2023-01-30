@@ -1,11 +1,20 @@
-const Redis = require("ioredis");
+import IoRedis, { Redis } from "ioredis";
 import Locals from "../../providers/Locals";
 class RedisStore {
   private client;
   constructor() {
-    const connString = Locals.config().REDIS_HOST + ":" + parseInt(Locals.config().REDIS_PORT);
-    this.client = new Redis();
-    this.client.on("error", (err) => console.log("Redis Client Error", err));
+    this.client = new IoRedis({
+      host: Locals.config().REDIS_HOST,
+      port: Locals.config().REDIS_PORT,
+      password: Locals.config().REDIS_PASSWORD,
+    });
+    this.client.monitor((error) => {
+      if (error) {
+        console.log("[Error in Redis connection]", error);
+      } else {
+        console.log("[Redis connected]");
+      }
+    });
   }
 
   public async get(key) {
